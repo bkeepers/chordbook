@@ -1,5 +1,13 @@
 <template>
   <ion-app>
+    <metainfo>
+      <template #title="{ content }">
+        {{ content }} - Chord Book
+      </template>
+      <template #description="{ content }">
+        {{ content }}
+      </template>
+    </metainfo>
     <reload-pwa />
     <ion-split-pane
       content-id="main"

@@ -1,6 +1,9 @@
 <script setup>
 import { logoGithub, handLeft, cashOutline } from 'ionicons/icons'
 import ColorizedImg from '@/components/ColorizedImg.vue'
+import { useMeta } from 'vue-meta'
+
+useMeta({ title: 'Home' })
 </script>
 
 <template>

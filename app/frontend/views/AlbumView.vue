@@ -103,6 +103,10 @@ export default {
     }
   },
 
+  metaInfo () {
+    return { title: this.album?.title }
+  },
+
   data () {
     return {
       album: {},

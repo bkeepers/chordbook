@@ -1,7 +1,9 @@
 <script setup>
 import useAuthStore from '@/stores/auth'
 import { defineProps, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useMeta } from 'vue-router'
+
+useMeta({ title: 'Reset Your Password' })
 
 const auth = useAuthStore()
 const router = useRouter()

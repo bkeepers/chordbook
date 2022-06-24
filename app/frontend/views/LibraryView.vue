@@ -1,5 +1,8 @@
 <script setup>
 import * as icons from '@/icons'
+import { useMeta } from 'vue-meta'
+
+useMeta({ title: 'Library' })
 </script>
 
 <template>

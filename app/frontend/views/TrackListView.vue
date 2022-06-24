@@ -45,6 +45,12 @@ import TrackItem from '@/components/TrackItem.vue'
 export default {
   components: { TrackItem },
 
+  metaInfo () {
+    return {
+      title: 'Songs'
+    }
+  },
+
   data () {
     const dataSource = new DataSource(this.$route.path, { params: this.$route.query })
 

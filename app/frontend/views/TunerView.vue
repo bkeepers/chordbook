@@ -20,4 +20,7 @@
 
 <script setup>
 import Tuner from '@/components/tuner.vue'
+import { useMeta } from 'vue-meta'
+
+useMeta({ title: 'Tuner' })
 </script>

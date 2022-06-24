@@ -38,6 +38,7 @@
     "vite-svg-loader": "^3.3.0",
     "vue": "^3.2.37",
     "vue-axios": "^3.4.1",
+    "vue-meta": "^3.0.0-alpha.10",
     "vue-router": "^4.0.16",
     "vue3-ace-editor": "^2.2.1"
   },

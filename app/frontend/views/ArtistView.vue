@@ -98,50 +98,45 @@
   </ion-page>
 </template>
 
-<script>
+<script setup>
 import client from '@/client'
 import TrackItem from '@/components/TrackItem.vue'
 import AlbumItem from '@/components/AlbumItem.vue'
 import AddToLibraryButton from '../components/AddToLibraryButton.vue'
+import { ref, computed, defineProps } from 'vue'
+import { useMeta } from 'vue-meta'
 
-export default {
-  components: { TrackItem, AlbumItem, AddToLibraryButton },
-
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
-
-  data () {
-    return {
-      artist: {},
-      tracks: [],
-      albums: []
-    }
-  },
-
-  ionViewWillEnter () {
-    return this.fetchData()
-  },
-
-  methods: {
-    async fetchData () {
-      return Promise.all([
-        client.get(`artists/${this.id}.json`).then(response => {
-          this.artist = response.data
-        }),
-        client.get(`artists/${this.id}/albums.json`).then(response => {
-          this.albums = response.data
-        }),
-        client.get(`artists/${this.id}/tracks.json`).then(response => {
-          this.tracks = response.data
-        })
-      ])
-    }
+const props = defineProps({
+  id: {
+    type: String,
+    required: true
   }
+})
+
+const artist = ref({})
+const tracks = ref([])
+const albums = ref([])
+
+useMeta(computed(() => ({
+  title: artist.value.name ?? 'Artist',
+  description: artist.value.biography ?? ''
+})))
+
+function fetchData () {
+  return Promise.all([
+    client.get(`artists/${props.id}.json`).then(response => {
+      artist.value = response.data
+    }),
+    client.get(`artists/${props.id}/albums.json`).then(response => {
+      albums.value = response.data
+    }),
+    client.get(`artists/${props.id}/tracks.json`).then(response => {
+      tracks.value = response.data
+    })
+  ])
 }
+
+fetchData()
 </script>
 
 <style scoped>

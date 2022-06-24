@@ -96,6 +96,7 @@ import GenreListView from '@/views/GenreListView.vue'
 import { useRouteQuery } from '@vueuse/router'
 import { useFetch } from '@/client'
 import { computed, ref, unref, reactive, watch } from 'vue'
+import { useMeta } from 'vue-meta'
 
 const types = {
   All: '',
@@ -103,6 +104,8 @@ const types = {
   Albums: 'Album',
   Songs: 'Track,Songsheet'
 }
+
+useMeta({ title: 'Discover' })
 
 const params = reactive({
   q: useRouteQuery('q'),

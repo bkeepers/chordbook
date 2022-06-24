@@ -71,6 +71,10 @@ import { add } from 'ionicons/icons'
 export default {
   components: { SongsheetItem, LibraryPlaceholder },
 
+  metaInfo () {
+    return { title: 'Songs' }
+  },
+
   data () {
     const dataSource = new DataSource(this.$route.path, { params: this.$route.query })
     return {

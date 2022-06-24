@@ -8,7 +8,7 @@
             default-href="/discover"
           />
         </ion-buttons>
-        <ion-title>{{ genre.name }}</ion-title>
+        <ion-title>{{ data?.name }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -16,12 +16,12 @@
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">
-            {{ genre.name }}
+            {{ data?.name }}
           </ion-title>
         </ion-toolbar>
       </ion-header>
 
-      <ion-list v-if="genre.tracks?.length > 0">
+      <ion-list v-if="data?.tracks.length > 0">
         <ion-list-header>
           <ion-label>Top Songs</ion-label>
           <ion-button :router-link="{ name: 'genre.tracks', params: { id } }">
@@ -31,14 +31,14 @@
 
         <div class="grid-scroll-x grid-rows-3 auto-cols-1/1 sm:auto-cols-1/2 lg:auto-cols-1/3 2xl:auto-cols-1/4">
           <track-item
-            v-for="track in genre.tracks"
+            v-for="track in data.tracks"
             :key="track.id"
             :track="track"
           />
         </div>
       </ion-list>
 
-      <ion-list v-if="genre.artists?.length > 0">
+      <ion-list v-if="data?.artists.length > 0">
         <ion-list-header>
           <ion-label>Top Artists</ion-label>
           <ion-button :router-link="{ name: 'genre.artists', params: { id } }">
@@ -48,14 +48,14 @@
 
         <div class="grid-scroll-x auto-cols-1/2 sm:auto-cols-1/3 md:auto-cols-1/4 lg:auto-cols-1/5 xl:auto-cols-1/6 2xl:auto-cols-1/8">
           <artist-card
-            v-for="artist in genre.artists"
+            v-for="artist in data.artists"
             :key="artist.id"
             :artist="artist"
           />
         </div>
       </ion-list>
 
-      <ion-list v-if="genre.albums?.length > 0">
+      <ion-list v-if="data?.albums.length > 0">
         <ion-list-header>
           <ion-label>Top Albums</ion-label>
           <ion-button :router-link="{ name: 'genre.albums', params: { id } }">
@@ -65,7 +65,7 @@
 
         <div class="grid-scroll-x auto-cols-1/2 sm:auto-cols-1/3 md:auto-cols-1/4 lg:auto-cols-1/5 xl:auto-cols-1/6 2xl:auto-cols-1/8">
           <album-item
-            v-for="album in genre.albums"
+            v-for="album in data.albums"
             :key="album.id"
             :album="album"
           />
@@ -75,44 +75,21 @@
   </ion-page>
 </template>
 
-<script>
-import client from '@/client'
-import { gradient } from '@/lib/gradient'
+<script setup>
+import { useFetch } from '@/client'
+import { defineProps, computed } from 'vue'
+import { useMeta } from 'vue-meta'
 import ArtistCard from '@/components/ArtistCard.vue'
 import AlbumItem from '@/components/AlbumItem.vue'
 import TrackItem from '@/components/TrackItem.vue'
 
-export default {
-  components: { ArtistCard, AlbumItem, TrackItem },
-
-  props: {
-    id: {
-      type: String,
-      required: true
-    }
-  },
-
-  data () {
-    return {
-      genre: {}
-    }
-  },
-
-  computed: {
-    style () {
-      if (!this.genre.name) return ''
-      return `background-image: ${gradient(this.genre.name, { colors: 4, spin: 22.5 })};`
-    }
-  },
-
-  ionViewWillEnter () {
-    return this.fetchData()
-  },
-
-  methods: {
-    async fetchData () {
-      this.genre = (await client.get(`genres/${this.id}.json`)).data
-    }
+const props = defineProps({
+  id: {
+    type: String,
+    required: true
   }
-}
+})
+
+const { data } = useFetch(`genres/${props.id}.json`).get().json()
+useMeta(computed(() => ({ title: data.value?.name ?? 'Genre' })))
 </script>

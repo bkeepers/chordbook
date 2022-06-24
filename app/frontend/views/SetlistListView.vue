@@ -1,12 +1,14 @@
 <script setup>
 import DataSource from '@/DataSource'
 import SetlistCard from '@/components/SetlistCard.vue'
-import { ref, onMounted } from 'vue'
+import { reactive } from 'vue'
 import { useRoute } from 'vue-router'
+import { useMeta } from 'vue-meta'
 
+useMeta({ title: 'Setlists' })
 const route = useRoute()
-const dataSource = ref(new DataSource('setlists.json', { params: route.query }))
-onMounted(() => dataSource.value.load())
+const dataSource = reactive(new DataSource('setlists.json', { params: route.query }))
+dataSource.load()
 </script>
 
 <template>

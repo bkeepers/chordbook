@@ -1,13 +1,14 @@
 <script setup>
 import DataSource from '@/DataSource'
-import client from '@/client'
+import { useFetch } from '@/client'
 import SongsheetItem from '@/components/SongsheetItem.vue'
 import AddToLibraryButton from '../components/AddToLibraryButton.vue'
 import ShareItem from '@/components/ShareItem.vue'
 import { toastController, actionSheetController } from '@ionic/vue'
 import * as icons from '@/icons'
-import { ref, defineProps, onMounted } from 'vue'
+import { ref, reactive, defineProps, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useMeta } from 'vue-meta'
 
 const props = defineProps({
   id: {
@@ -18,22 +19,18 @@ const props = defineProps({
 
 const route = useRoute()
 const router = useRouter()
-const dataSource = ref(new DataSource(`setlists/${props.id}/items.json`, { params: route.query }))
+const dataSource = reactive(new DataSource(`setlists/${props.id}/items.json`, { params: route.query }))
 const editing = ref(false)
-const setlist = ref({})
 
-onMounted(() => {
-  client.get(`setlists/${props.id}.json`).then(response => {
-    setlist.value = response.data
-  })
+const { data: setlist } = useFetch(`setlists/${props.id}.json`).get().json()
+useMeta(computed(() => ({ title: setlist.value?.title ?? '' })))
 
-  dataSource.value.load()
-})
+dataSource.load()
 
 async function reorder (e) {
-  const songsheet = dataSource.value.items[e.detail.from]
+  const songsheet = dataSource.items[e.detail.from]
 
-  await client.patch(`setlists/${props.id}/items/${songsheet.id}.json`, {
+  await useFetch(`setlists/${props.id}/items/${songsheet.id}.json`).patch({
     item: { position: e.detail.to + 1 }
   })
 
@@ -41,8 +38,8 @@ async function reorder (e) {
 }
 
 async function remove (songsheet) {
-  await client.delete(`setlists/${props.id}/items/${songsheet.id}.json`)
-  dataSource.value.items.splice(dataSource.value.items.indexOf(songsheet), 1)
+  await useFetch(`setlists/${props.id}/items/${songsheet.id}.json`).delete()
+  dataSource.items.splice(dataSource.items.indexOf(songsheet), 1)
   return (await toastController.create({
     message: `${songsheet.title} was removed from ${setlist.value.title}`,
     duration: 3000
@@ -59,7 +56,7 @@ async function destroy () {
           role: 'destructive',
           icon: icons.trash,
           handler: async () => {
-            await client.delete(`setlists/${props.id}.json`)
+            await useFetch(`setlists/${props.id}.json`).delete()
             router.back({ name: 'setlists' })
           }
         },
@@ -77,7 +74,7 @@ async function destroy () {
       collapse="fade"
     >
       <ion-toolbar>
-        <ion-title>{{ setlist.title }}</ion-title>
+        <ion-title>{{ setlist?.title }}</ion-title>
 
         <ion-buttons slot="start">
           <ion-back-button
@@ -94,12 +91,12 @@ async function destroy () {
             Done
           </ion-button>
           <add-to-library-button
-            v-if="setlist.uid && !editing"
-            :uid="setlist.uid"
+            v-if="setlist?.uid && !editing"
+            :uid="setlist?.uid"
           />
           <ion-button
             v-if="!editing"
-            :id="`setlist-context-${setlist.id}`"
+            :id="`setlist-context-${setlist?.id}`"
           >
             <ion-icon
               slot="icon-only"
@@ -115,12 +112,12 @@ async function destroy () {
     <ion-content fullscreen>
       <ion-header collapse="condense">
         <ion-toolbar>
-          <ion-title>{{ setlist.title }}</ion-title>
+          <ion-title>{{ setlist?.title }}</ion-title>
         </ion-toolbar>
       </ion-header>
 
       <p class="ion-padding">
-        {{ setlist.description }}
+        {{ setlist?.description }}
       </p>
 
       <ion-list>
@@ -163,7 +160,7 @@ async function destroy () {
     </ion-content>
 
     <ion-popover
-      :trigger="`setlist-context-${setlist.id}`"
+      :trigger="`setlist-context-${setlist?.id}`"
       dismiss-on-select
     >
       <ion-list>
@@ -185,7 +182,7 @@ async function destroy () {
         </ion-item>
         <share-item
           lines="none"
-          :title="setlist.title"
+          :title="setlist?.title"
           :router-link="{ name: 'setlist', params: { id } }"
         />
       </ion-list>

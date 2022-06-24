@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import useAuthStore from '@/stores/auth'
+import { useMeta } from 'vue-meta'
 
+useMeta({ title: 'Reset Password' })
 const auth = useAuthStore()
 const params = ref({})
 const { isFinished, error, execute, data } = auth.forgotPassword(params, { immediate: false })

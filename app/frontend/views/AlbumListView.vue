@@ -1,3 +1,19 @@
+<script setup>
+import DataSource from '@/DataSource'
+import AlbumItem from '@/components/AlbumItem.vue'
+import LibraryPlaceholder from '@/components/LibraryPlaceholder.vue'
+import { computed, reactive } from 'vue'
+import { useRoute } from 'vue-router'
+import { useMeta } from 'vue-meta'
+
+useMeta({ title: 'Albums' })
+const route = useRoute()
+const dataSource = reactive(new DataSource(route.path, { params: route.query }))
+const backLink = computed(() => route.path.replace('/albums', ''))
+
+dataSource.load()
+</script>
+
 <template>
   <ion-page>
     <ion-header
@@ -45,32 +61,3 @@
     </ion-content>
   </ion-page>
 </template>
-
-<script>
-import DataSource from '@/DataSource'
-import AlbumItem from '@/components/AlbumItem.vue'
-import LibraryPlaceholder from '@/components/LibraryPlaceholder.vue'
-
-export default {
-  components: { AlbumItem, LibraryPlaceholder },
-
-  data () {
-    const dataSource = new DataSource(this.$route.path, { params: this.$route.query })
-
-    return {
-      dataSource
-    }
-  },
-
-  computed: {
-    backLink () {
-      return this.$route.path.replace('/albums', '')
-    }
-  },
-
-  created () {
-    this.dataSource.load()
-  }
-
-}
-</script>

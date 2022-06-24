@@ -1,3 +1,19 @@
+<script setup>
+import DataSource from '@/DataSource'
+import ArtistItem from '@/components/ArtistItem.vue'
+import LibraryPlaceholder from '@/components/LibraryPlaceholder.vue'
+import { useMeta } from 'vue-meta'
+import { useRoute } from 'vue-router'
+import { reactive, computed } from 'vue'
+
+useMeta({ title: 'Artists' })
+const route = useRoute()
+const backLink = computed(() => route.path.replace('/artists', '') || '/library')
+const dataSource = reactive(new DataSource(route.path, { params: route.query }))
+
+dataSource.load()
+</script>
+
 <template>
   <ion-page>
     <ion-header translucent>
@@ -49,29 +65,3 @@
     </ion-content>
   </ion-page>
 </template>
-
-<script>
-import DataSource from '@/DataSource'
-import ArtistItem from '@/components/ArtistItem.vue'
-import LibraryPlaceholder from '@/components/LibraryPlaceholder.vue'
-
-export default {
-  components: { ArtistItem, LibraryPlaceholder },
-
-  data () {
-    const dataSource = new DataSource(this.$route.path, { params: this.$route.query })
-
-    return { dataSource }
-  },
-
-  computed: {
-    backLink () {
-      return this.$route.path.replace('/artists', '') || '/library'
-    }
-  },
-
-  created () {
-    this.dataSource.load()
-  }
-}
-</script>

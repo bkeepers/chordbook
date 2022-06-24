@@ -208,6 +208,10 @@ export default {
     }
   },
 
+  metaInfo () {
+    return { title: this.songsheet.title }
+  },
+
   data () {
     return {
       songsheet: {},
