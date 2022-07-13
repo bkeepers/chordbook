@@ -1,4 +1,3 @@
-## Source: https://gorails.com/episodes/github-actions-continuous-integration-ruby-on-rails
 name: Tests
 
 on:
@@ -7,8 +6,9 @@ on:
   pull_request:
 
 jobs:
-  rails:
-    name: Rails
+  ## Source: https://gorails.com/episodes/github-actions-continuous-integration-ruby-on-rails
+  ruby:
+    name: Ruby
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -43,3 +43,13 @@ jobs:
         run: |
           bin/setup
           bin/test
+  js:
+    name: JavaScript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'yarn'
+      - run: yarn install --immutable
+      - run: yarn test
