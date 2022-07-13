@@ -47,6 +47,8 @@
   "devDependencies": {
     "@capacitor/cli": "^3.6",
     "@capacitor/ios": "^3.6",
+    "@testing-library/vue": "^6.6",
+    "@vue/test-utils": "^2.0",
     "eslint": "^8.19",
     "eslint-config-standard": "^16.0",
     "eslint-gitignore": "^0.1",
@@ -54,7 +56,9 @@
     "eslint-plugin-node": "^11.1",
     "eslint-plugin-promise": "^5.2",
     "eslint-plugin-vue": "^9.1",
-    "standard": "^17.0"
+    "jsdom": "^20.0",
+    "standard": "^17.0",
+    "vitest": "^0.16"
   },
   "scripts": {
     "dev": "vite",
@@ -63,6 +67,7 @@
     "serve": "vite preview",
     "lint": "eslint --ignore-path .gitignore --ignore-pattern vendor/ --ext .js,.vue .",
     "ionic:serve": "vite",
-    "ionic:build": "vite build"
+    "ionic:build": "vite build",
+    "test": "vitest"
   }
 }
