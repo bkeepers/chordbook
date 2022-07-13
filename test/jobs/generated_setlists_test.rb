@@ -34,14 +34,16 @@ class GeneratedSetlistsTest < ActiveJob::TestCase
   end
 
   test "`What's New` includes recently created songsheets" do
-    newer = create :songsheet
-    older = create :songsheet, created_at: 3.months.ago
+    songsheets = 300.times.map { |i| create :songsheet, rank: i + 1 }
+    # High rank but older songsheet
+    older = create :songsheet, created_at: 1.week.ago, rank: 0
 
     GeneratedSetlists.new.perform
 
     setlist = User.app.setlists.find_by!(title: "What's New")
 
-    assert_includes setlist.songsheets, newer
+    assert_includes setlist.songsheets, songsheets[0]
+    assert_includes setlist.songsheets, songsheets[99]
     refute_includes setlist.songsheets, older
   end
 
