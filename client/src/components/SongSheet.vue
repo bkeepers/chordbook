@@ -4,6 +4,8 @@
     :scroll-y="columns == 1"
     :scroll-x="columns == 2"
     fullscreen
+    :scroll-events="true"
+    v-scroll-direction
   >
     <slot name="top" />
     <div :class="'ion-padding ' + (columns == 1 ? 'single-column' : 'horizontal-columns')">

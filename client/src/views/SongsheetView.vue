@@ -48,12 +48,10 @@
       @update:key="(v) => key = v"
     >
       <template #top>
-        <Transition name="slide-down">
-          <songsheet-media
-            v-if="showPlayer"
-            :songsheet="songsheet"
-          />
-        </Transition>
+        <songsheet-media
+          v-if="showPlayer"
+          :songsheet="songsheet"
+        />
       </template>
       <template
         v-if="songsheet.track"

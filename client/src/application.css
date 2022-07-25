@@ -56,3 +56,12 @@
 *[routerlink] {
   @apply cursor-pointer;
 }
+
+.hide-on-scroll-down {
+  transform: translateY(0);
+  transition: 0.1s all ease-out;
+}
+
+.scroll-down .hide-on-scroll-down {
+  transform: translateY(max(-100%, var(--scroll-distance)));
+}
